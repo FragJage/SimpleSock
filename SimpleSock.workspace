@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_workspace_file>
+	<Workspace title="Workspace">
+		<Project filename="SimpleSock.cbp" />
+		<Project filename="SimpleSock - Example1.cbp" />
+		<Project filename="SimpleSock - Example2.cbp" />
+	</Workspace>
+</CodeBlocks_workspace_file>
