@@ -27,6 +27,7 @@ Unit tests passed successfully on :
  - Linux Ubuntu (CPU Intel Atom)
  - Linux Raspian on Raspberry Pi (CPU ARM)
  - Linux FunPlug on NAS DNS-320 (CPU ARM)
+
 (Compilation directives define LINUX or WIN only necessary for colours in unit tests)
 
 For more informations
