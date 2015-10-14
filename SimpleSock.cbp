@@ -26,7 +26,6 @@
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
-					<Add option="-O2" />
 					<Add option="-Wnon-virtual-dtor" />
 					<Add option="-Wshadow" />
 					<Add option="-Winit-self" />
@@ -34,7 +33,6 @@
 					<Add option="-Wcast-align" />
 					<Add option="-Wundef" />
 					<Add option="-Wfloat-equal" />
-					<Add option="-Winline" />
 					<Add option="-Wunreachable-code" />
 					<Add option="-Wmissing-declarations" />
 					<Add option="-Wmissing-include-dirs" />
@@ -42,7 +40,9 @@
 					<Add option="-Wswitch-default" />
 					<Add option="-Weffc++" />
 					<Add option="-Wmain" />
+					<Add option="-pedantic-errors" />
 					<Add option="-pedantic" />
+					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-std=c++11" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
