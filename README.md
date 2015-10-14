@@ -31,7 +31,7 @@ Unit tests passed successfully on :
 
 For more informations
 =====================
-Documentation http://catjage.free.fr//dev/SimpleSock/index.html
+Documentation http://catjage.free.fr/dev/SimpleSock/index.html
 
 Licence
 =======
