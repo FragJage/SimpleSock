@@ -17,6 +17,7 @@ Features
 Quality developpment
 ====================
  - Static audit with CppCheck
+ - Security audit with VisualCodeGrepper
  - Dynamic audit with Address Sanitizer.
  - Unit tests replay for each version.
 
@@ -28,11 +29,9 @@ Unit tests passed successfully on :
  - Linux Raspian on Raspberry Pi (CPU ARM)
  - Linux FunPlug on NAS DNS-320 (CPU ARM)
 
-(Compilation directives define LINUX or WIN only necessary for colours in unit tests)
-
 For more informations
 =====================
-See documentation in doc/html/index.html
+Documentation http://catjage.free.fr//dev/SimpleSock/index.html
 
 Licence
 =======

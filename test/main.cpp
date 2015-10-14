@@ -16,8 +16,15 @@ using namespace std;
 #define OSSEP "/"
 #endif // LINUX
 
+void EcrireEnCouleur(int couleur, string msg);
+void Titre(string myTitre);
+void Resultat(string myTest, bool myResult);
+void testUnitaireTCP();
+void testUnitaireUDP();
+
 #ifdef WIN32
 #include <Windows.h>
+
 void EcrireEnCouleur(int couleur, string msg)
 {
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -33,6 +40,9 @@ void EcrireEnCouleur(int couleur, string msg)
             SetConsoleTextAttribute(consoleHandle, BACKGROUND_INTENSITY | BACKGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_RED);
             break;
         case COULEUR_NORMALE:
+            SetConsoleTextAttribute(consoleHandle, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
+            break;
+        default :
             SetConsoleTextAttribute(consoleHandle, FOREGROUND_GREEN | FOREGROUND_BLUE | FOREGROUND_RED);
             break;
     }
@@ -57,6 +67,8 @@ void EcrireEnCouleur(int couleur, string msg)
         case COULEUR_NORMALE:
             printf("\033[0m");
             break;
+        default :
+            printf("\033[0m");
     }
     cout << msg;
 }
@@ -259,6 +271,17 @@ void testUnitaireUDP()
         bOk = false;
     }
     Resultat("Test de la methode Send", bOk);
+
+    bOk = true;
+    try
+    {
+        sockUDPrecepteur.WaitRecv(10000);
+    }
+    catch(const char* e)
+    {
+        bOk = false;
+    }
+    Resultat("Test de la methode WaitRecv", bOk);
 
     bOk = true;
     try

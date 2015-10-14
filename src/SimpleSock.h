@@ -24,7 +24,10 @@
 ///
 /// \section intro_sec Introduction
 /// Very simple class to manage socket communication TCP or UDP.\n
-/// To use, include in your project SimpleSock.cpp and SimpleSock.h.
+/// To use, include in your project SimpleSock.cpp, SimpleSock.h, SafeFunctions.cpp and SafeFunctions.h.
+/// \author Francois GELLEZ
+/// \version 1.1
+/// \date 13/10/2015
 ///
 /// \section feature_sec Features
 /// \li Support TCP and UDP Socket
@@ -34,16 +37,17 @@
 ///
 /// \section quality_sec Quality developpment
 /// \li Static audit with CppCheck
+/// \li Security audit with VisualCodeGrepper
 /// \li Dynamic audit with Address Sanitizer.
 /// \li Unit tests replay for each version.
 ///
 /// \section portability_sec Portability
 /// Unit tests passed successfully on :
-/// \li Windows Seven (CPU Intel Celeron)
+/// \li Windows Seven (CPU Intel Celeron) with MinGW
 /// \li Linux Ubuntu (CPU Intel Atom)
 /// \li Linux Raspian on Raspberry Pi (CPU ARM)
 /// \li Linux FunPlug on NAS DNS-320 (CPU ARM)
-/// \n(Compilation directives define LINUX or WIN only necessary for colours in unit tests)
+/// \n For GCC versions < 4.7 replaced -std=C++11 by -std=C++0x
 ///
 /// \section example_sec Example
 /// \code
@@ -75,10 +79,9 @@
 /// }
 /// \endcode
 ///
-/// \section WhatsNew1_sec What's New in version 1.0
-/// \li Now support TCP socket
-/// \li Improving the portability
-/// \li Add audit of source code
+/// \section WhatsNew1_sec What's New in version 1.1
+/// \li Add security audit of source code
+/// \li Add many Warning Options on GCC
 ///
 /// \section licence_sec Licence
 ///  SimpleSock is free software : you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\n
@@ -95,6 +98,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include "SafeFunctions.h"
 
 #ifdef __linux__
     #include <cerrno>
@@ -162,7 +166,7 @@ class SimpleSock
         /// \param    buffer         Buffer to send
         /// \param    bufferSize         Size of the buffer
         /// \details  Send a buffer to the host.
-        void Send(const char* buffer, int bufferSize);
+        void Send(const char* buffer, size_t bufferSize);
 
         /// \brief    Receive a string
         /// \param    buffer         String to receive
@@ -174,7 +178,7 @@ class SimpleSock
         /// \param    buffer      Buffer to receive
         /// \param    bufferSize         Size of the buffer
         /// \details  Receive a buffer from the host.
-        unsigned Recv(char* buffer, int bufferSize);
+        unsigned Recv(char* buffer, size_t bufferSize);
 
         /// \brief    Set the blocking mode
         /// \param    blocking    True or false
@@ -197,7 +201,7 @@ class SimpleSock
 
         /// \brief    Destructor of SimpleSock
         /// \details  Destructor of SimpleSock.
-        ~SimpleSock();
+        virtual ~SimpleSock();
 
         /// \brief    Get the last SocketError
         /// \details  Get the last SocketError.
@@ -334,8 +338,8 @@ public:
     private:
         void SetWhatMsg();
         int m_number;
-        int m_system;
         std::string m_message;
+        int m_system;
         std::string m_whatMsg;
 };
 

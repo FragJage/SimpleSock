@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1444168741 source:d:\sources\simplesock\src\simplesock.cpp
+1444772113 source:d:\sources\simplesock\src\simplesock.cpp
 	<iostream>
 	<exception>
 	"SimpleSock.h"
@@ -12,23 +12,34 @@
 	<winsock2.h>
 	<ws2tcpip.h>
 
-1444333990 source:d:\sources\simplesock\test\main.cpp
+1444855012 source:d:\sources\simplesock\test\main.cpp
 	<iostream>
 	"SimpleSock.h"
 	<Windows.h>
 
-1444334893 d:\sources\simplesock\src\simplesock.h
+1444857395 d:\sources\simplesock\src\simplesock.h
 	<string>
 	<cstring>
 	<fstream>
 	<sstream>
 	<exception>
+	"SafeFunctions.h"
 	<cerrno>
 	<sys/ioctl.h>
 	<sys/socket.h>
 	<arpa/inet.h>
 	<net/if.h>
 	<fcntl.h>
+	<unistd.h>
 	<winsock2.h>
 	<ws2tcpip.h>
+
+1444769688 source:d:\sources\simplesock\src\safefunctions.cpp
+	"SafeFunctions.h"
+
+1444769678 d:\sources\simplesock\src\safefunctions.h
+	<string.h>
+	<cstdint>
+	<stddef.h>
+	<errno.h>
 

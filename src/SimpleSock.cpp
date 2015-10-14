@@ -41,14 +41,13 @@ void SimpleSock::InitSocket()
     #endif // WIN32
 }
 
-SimpleSock::SimpleSock(int type)
+#pragma GCC diagnostic push         //Enable to initialize struct sockaddr_in m_sockAddress because it's different between LINUX and WIN32
+#pragma GCC diagnostic ignored "-Weffc++"
+SimpleSock::SimpleSock(int type) : m_sockHandle(INVALID_SOCKET), m_isOpen(false), m_sockType(type), m_blocking(false)
 {
-    m_sockHandle = INVALID_SOCKET;
     if(!SimpleSock::m_initSocket) InitSocket();
-    m_isOpen = false;
-    m_sockType = type;
-    m_blocking = false;
 }
+#pragma GCC diagnostic pop
 
 SimpleSock::~SimpleSock()
 {
@@ -151,18 +150,20 @@ bool SimpleSock::WaitRecv(int delay)
     tvDelay.tv_sec=0;
     tvDelay.tv_usec=delay;
 
-    select(m_sockHandle+1, &fsSock, NULL, NULL, &tvDelay);
+    select(m_sockHandle+1, &fsSock, nullptr, nullptr, &tvDelay);
 
     return FD_ISSET(m_sockHandle, &fsSock)>0;
 }
 
-void SimpleSock::Send(const char* buffer, int bufferSize)
+void SimpleSock::Send(const char* buffer, size_t bufferSize)
 {
     size_t sizeSent;
     size_t sizeMax;
     int status;
 
 
+    if(bufferSize==0) throw SimpleSock::Exception(0x0044, "SimpleSock::Send: Invalid buffer size");
+    if(buffer==nullptr) throw SimpleSock::Exception(0x0043, "SimpleSock::Send: Unable to send null buffer");
     if(!m_isOpen) throw SimpleSock::Exception(0x0042, "SimpleSock::Send: Open() method is mandatory before Send()");
 
     sizeMax = bufferSize;
@@ -196,17 +197,19 @@ void SimpleSock::Send(const string& buffer)
     Send(buffer.c_str(), buffer.size());
 }
 
-unsigned SimpleSock::Recv(char* buffer, int bufferSize)
+unsigned SimpleSock::Recv(char* buffer, size_t bufferSize)
 {
 	int status;
 
 
+    if(bufferSize==0) throw SimpleSock::Exception(0x0054, "SimpleSock::Recv: Invalid buffer size");
+    if(buffer==nullptr) throw SimpleSock::Exception(0x0053, "SimpleSock::Recv: Invalid buffer pointer");
     if(!m_isOpen) throw SimpleSock::Exception(0x0052, "SimpleSock::Recv: Listen() or Connect() method is mandatory before Recv()");
 
     switch(m_sockType)
     {
         case SOCK_DGRAM :
-            status = recvfrom(m_sockHandle, buffer, bufferSize, 0, 0, 0);
+            status = recvfrom(m_sockHandle, buffer, bufferSize, 0, nullptr, nullptr);
             break;
 
         case SOCK_STREAM :
@@ -223,13 +226,14 @@ unsigned SimpleSock::Recv(char* buffer, int bufferSize)
 	return status;
 }
 
-bool SimpleSock::Recv(string& buffer, int sizeMax)
+bool SimpleSock::Recv(string& buffer, int sizMax)
 {
 	int status;
 	char buf[1536];
 	bool bRet;
 
 
+    if(sizMax<-1) throw SimpleSock::Exception(0x0054, "SimpleSock::Recv: Invalid buffer size");
     if(!m_isOpen) throw SimpleSock::Exception(0x0052, "SimpleSock::Recv: Listen() or Connect() method is mandatory before Recv()");
 
     buffer = "";
@@ -239,11 +243,11 @@ bool SimpleSock::Recv(string& buffer, int sizeMax)
         int sizBuf;
 
         sizBuf = sizeof(buf)-1;
-        if((sizeMax!=-1)&&(sizBuf>sizeMax)) sizBuf=sizeMax;
+        if((sizMax!=-1)&&(sizBuf>sizMax)) sizBuf=sizMax;
         switch(m_sockType)
         {
             case SOCK_DGRAM :
-                status = recvfrom(m_sockHandle, buf, sizBuf, 0, 0, 0);
+                status = recvfrom(m_sockHandle, buf, sizBuf, 0, nullptr, nullptr);
                 break;
 
             case SOCK_STREAM :
@@ -262,10 +266,10 @@ bool SimpleSock::Recv(string& buffer, int sizeMax)
             buf[status]='\0';
             buffer += buf;
             bRet = true;
-            if(sizeMax!=-1)
+            if(sizMax!=-1)
             {
-                sizeMax -= status;
-                if(sizeMax==0) status = -1;
+                sizMax -= status;
+                if(sizMax==0) status = -1;
             }
         }
 
@@ -399,6 +403,8 @@ unsigned long SimpleSockUDP::BroadcastAddress(const string& interfaceName="")
 }
 
 #ifdef __linux__
+#pragma GCC diagnostic push         //I don't understand, perhaps a false positive
+#pragma GCC diagnostic ignored "-Wcast-align"
 bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
 {
 	struct ifreq interface;
@@ -414,28 +420,30 @@ bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int s
 	memset((char*)&interface, 0, sizeof(interface));
 	interface.ifr_addr.sa_family = AF_INET;
 	interface.ifr_broadaddr.sa_family = AF_INET;
-    strcpy(interface.ifr_name,interfaceName.c_str());
+    strcpy_s(interface.ifr_name, IFNAMSIZ, interfaceName.c_str());
 
 	if ((ioctl(socket, SIOCGIFADDR, &interface))!=0) return false;
-	memcpy(interfaceAddr, &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
+	memcpy_s(interfaceAddr, sizeof(struct in_addr), &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
 
 	if ((ioctl(socket, SIOCGIFNETMASK, &interface))!=0) return false;
-	memcpy(netmaskAddr, &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
+	memcpy_s(netmaskAddr,   sizeof(struct in_addr), &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
 
 	return true;
 }
+#pragma GCC diagnostic pop
 #else
+#pragma GCC diagnostic push         //To conserve the same prototype between WIN32 and LINUX
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
 {
 	DWORD bytesReturned;
 	u_long flags;
-	INTERFACE_INFO localAddr[10];  // Assume there will be no more than 10 IP interfaces
+	INTERFACE_INFO localAddr[10];  //Search the network interface in the top 10 IP interfaces
 	int numLocalAddr;
 	int i;
 
 
-	if ((WSAIoctl(socket, SIO_GET_INTERFACE_LIST, NULL, 0, &localAddr, sizeof(localAddr), &bytesReturned, NULL, NULL)) == SOCKET_ERROR) return false;
+	if ((WSAIoctl(socket, SIO_GET_INTERFACE_LIST, nullptr, 0, &localAddr, sizeof(localAddr), &bytesReturned, nullptr, nullptr)) == SOCKET_ERROR) return false;
 
 	numLocalAddr = (bytesReturned/sizeof(INTERFACE_INFO));
 	for (i=0; i<numLocalAddr; i++)
@@ -447,8 +455,8 @@ bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int s
 		if (flags & IFF_LOOPBACK) continue;
 		if (flags & IFF_POINTTOPOINT) continue;
 
-        memcpy(interfaceAddr, &localAddr[i].iiAddress.AddressIn.sin_addr, sizeof(struct in_addr));
-        memcpy(netmaskAddr,   &localAddr[i].iiNetmask.AddressIn.sin_addr, sizeof(struct in_addr));
+        memcpy_s(interfaceAddr, sizeof(struct in_addr), &localAddr[i].iiAddress.AddressIn.sin_addr, sizeof(struct in_addr));
+        memcpy_s(netmaskAddr,   sizeof(struct in_addr), &localAddr[i].iiNetmask.AddressIn.sin_addr, sizeof(struct in_addr));
 
 		break;
 	}
@@ -506,19 +514,13 @@ bool SimpleSockTCP::Accept(SimpleSockTCP* sockAccept)
 /*** Class SimpleSock::Exception                                                                 ***/
 /***                                                                                             ***/
 /***************************************************************************************************/
-SimpleSock::Exception::Exception(int number, string const& message) throw()
+SimpleSock::Exception::Exception(int number, string const& message) throw() : m_number(number), m_message(message), m_system(0), m_whatMsg()
 {
-    m_number = number;
-    m_message = message;
-    m_system = 0;
     SetWhatMsg();
 }
 
-SimpleSock::Exception::Exception(int number, string const& message, int system) throw()
+SimpleSock::Exception::Exception(int number, string const& message, int system) throw() : m_number(number), m_message(message), m_system(system), m_whatMsg()
 {
-    m_number = number;
-    m_message = message;
-    m_system = system;
     SetWhatMsg();
 }
 
