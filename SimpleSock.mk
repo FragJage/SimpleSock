@@ -2,11 +2,21 @@
 #	Makefile de SimpleSock
 #
 
-# CFLAGS_RELEASE := -O2 -s -std=c++11
-# CFLAGS_RELEASE GCC < 4.7 := -O2 -s -std=c++0x
-# CFLAGS_DEBUG := -O0 -std=c++11 -g -ggdb3 -fsanitize=address -Wall -Wextra -Wzero-as-null-pointer-constant -pedantic -pedantic-errors -Wmain -Weffc++ -Wswitch-default -Wswitch-enum -Wmissing-declarations -Wunreachable-code -Wfloat-equal -Wundef -Wcast-align -Wredundant-decls -Winit-self -Wshadow -Wnon-virtual-dtor 
-# CFLAGS_DEBUG GCC < 4.7 := -O0 -std=c++11 -g -ggdb3 -Wall -Wextra -pedantic -pedantic-errors -Wmain -Weffc++ -Wswitch-default -Wswitch-enum -Wmissing-declarations -Wunreachable-code -Wfloat-equal -Wundef -Wcast-align -Wredundant-decls -Winit-self -Wshadow -Wnon-virtual-dtor
-CFLAGS= -DLINUX -Isrc -O0 -std=c++11 -g -ggdb3 -fsanitize=address -Wall -Wextra -Wzero-as-null-pointer-constant -pedantic -pedantic-errors -Wmain -Weffc++ -Wswitch-default -Wswitch-enum -Wmissing-declarations -Wunreachable-code -Wfloat-equal -Wundef -Wcast-align -Wredundant-decls -Winit-self -Wshadow -Wnon-virtual-dtor  
+GCCVERSIONGTEQ47 := $(shell expr `gcc -dumpversion | cut -f2 -d.` \>= 7)
+
+ifeq "$(GCCVERSIONGTEQ4)" "1"
+    CFLAGS = -std=c++11 -fsanitize=address -Wzero-as-null-pointer-constant
+else
+    CFLAGS = -std=c++0x
+endif
+
+ifeq ($(mode),debug)
+  CFLAGS += -O0 -g -ggdb3 -Wall -Wextra -pedantic -pedantic-errors -Wmain -Weffc++ -Wswitch-default -Wswitch-enum -Wmissing-declarations -Wunreachable-code -Wfloat-equal -Wundef -Wcast-align -Wredundant-decls -Winit-self -Wshadow -Wnon-virtual-dtor
+else
+  CFLAGS += -O2 -s 
+endif
+
+CFLAGS+= -DLINUX -Isrc  
 LDFLAGS=-lm
 
 VPATH = src:test:examples
