@@ -77,7 +77,7 @@ void SimpleSock::Open(int port, unsigned long ipAddress)
     if(m_sockHandle == INVALID_SOCKET)
     {
         m_sockHandle = (int)socket(AF_INET, m_sockType, 0);
-        if(m_sockHandle==0) throw  SimpleSock::Exception(0x0001, "SimpleSock::Constructor: unable to create the socket", GetSocketError());
+        if(m_sockHandle==0) throw  SimpleSock::Exception(0x0001, "SimpleSock::Open: unable to create the socket", GetSocketError());
     }
 
     memset(&m_sockAddress, 0, sizeof(m_sockAddress));
@@ -282,6 +282,12 @@ void SimpleSock::Blocking(bool blocking)
 {
     int result;
 
+    if(m_sockHandle == INVALID_SOCKET)
+    {
+        m_sockHandle = (int)socket(AF_INET, m_sockType, 0);
+        if(m_sockHandle==0) throw  SimpleSock::Exception(0x0001, "SimpleSock::Blocking: unable to create the socket", GetSocketError());
+    }
+
 	#ifdef __linux__
         int flags;
         flags = fcntl(m_sockHandle, F_GETFL);
@@ -297,7 +303,7 @@ void SimpleSock::Blocking(bool blocking)
 	#endif
 
     if (result == -1)
-        throw SimpleSockUDP::Exception(0x0031, "SimpleSockUDP::Blocking: ioctl error", GetSocketError());
+        throw SimpleSock::Exception(0x0031, "SimpleSock::Blocking: ioctl error", GetSocketError());
 
     m_blocking = blocking;
 }
