@@ -18,7 +18,6 @@
     along with SimpleSock.  If not, see <http://www.gnu.org/licenses/>.
 */
 /***************************************************************************************************/
-#include <iostream>
 #include <exception>
 #include "SimpleSock.h"
 using namespace std;
@@ -454,12 +453,13 @@ bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int s
 	numLocalAddr = (bytesReturned/sizeof(INTERFACE_INFO));
 	for (i=0; i<numLocalAddr; i++)
 	{
+        //cout << "view : " << inet_ntoa(localAddr[i].iiAddress.AddressIn.sin_addr) << endl;
 		flags = localAddr[i].iiFlags;
-		if(!(flags & IFF_UP)) continue;
-		if(!(flags & IFF_BROADCAST)) continue;
-		if(!(flags & IFF_MULTICAST)) continue;
-		if (flags & IFF_LOOPBACK) continue;
-		if (flags & IFF_POINTTOPOINT) continue;
+		if(!(flags & IFF_UP)) continue;             //Pas démarré
+		if(!(flags & IFF_BROADCAST)) continue;      //Pas de broadcast
+		if(!(flags & IFF_MULTICAST)) continue;      //Pas de multicast
+		if (flags & IFF_LOOPBACK) continue;         //C'est le loopback
+		if (flags & IFF_POINTTOPOINT) continue;     //C'est le point à point
 
         memcpy_s(interfaceAddr, sizeof(struct in_addr), &localAddr[i].iiAddress.AddressIn.sin_addr, sizeof(struct in_addr));
         memcpy_s(netmaskAddr,   sizeof(struct in_addr), &localAddr[i].iiNetmask.AddressIn.sin_addr, sizeof(struct in_addr));
