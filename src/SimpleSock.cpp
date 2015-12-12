@@ -334,13 +334,18 @@ bool SimpleSock::OperationOk()
 /*** Class SimpleSockUDP                                                                         ***/
 /***                                                                                             ***/
 /***************************************************************************************************/
-SimpleSockUDP::SimpleSockUDP() : SimpleSock(SOCK_DGRAM)
+SimpleSockUDP::SimpleSockUDP() : SimpleSock(SOCK_DGRAM), m_networkInterface("")
 {
+}
+
+void SimpleSockUDP::SetNetworkInterface(const string& networkInterface)
+{
+    m_networkInterface = networkInterface;
 }
 
 void SimpleSockUDP::Open(int port)
 {
-    SimpleSock::Open(port, BroadcastAddress(""));
+    SimpleSock::Open(port, BroadcastAddress(m_networkInterface));
     //Open(port, INADDR_BROADCAST); //-> Erreur sur le sendto
 }
 
@@ -351,7 +356,7 @@ void SimpleSockUDP::Open(int port, const string& ipAddress)
 
 void SimpleSockUDP::Listen(int port)
 {
-    SimpleSock::Listen(port, BroadcastAddress(""));
+    SimpleSock::Listen(port, BroadcastAddress(m_networkInterface));
 }
 
 void SimpleSockUDP::Listen(int port, int address)
@@ -439,14 +444,23 @@ bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int s
 #else
 #pragma GCC diagnostic push         //To conserve the same prototype between WIN32 and LINUX
 #pragma GCC diagnostic ignored "-Wunused-parameter"
-bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
+bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceAddress, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
 {
 	DWORD bytesReturned;
 	u_long flags;
 	INTERFACE_INFO localAddr[10];  //Search the network interface in the top 10 IP interfaces
 	int numLocalAddr;
 	int i;
+    unsigned long searchAddress;
 
+
+    searchAddress = 0;
+    if(interfaceAddress!="")
+    {
+        searchAddress = inet_addr(interfaceAddress.c_str());
+        if(searchAddress == INADDR_NONE) searchAddress = 0;
+        if(searchAddress == INADDR_ANY) searchAddress = 0;
+    }
 
 	if ((WSAIoctl(socket, SIO_GET_INTERFACE_LIST, nullptr, 0, &localAddr, sizeof(localAddr), &bytesReturned, nullptr, nullptr)) == SOCKET_ERROR) return false;
 
@@ -454,6 +468,7 @@ bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int s
 	for (i=0; i<numLocalAddr; i++)
 	{
         //cout << "view : " << inet_ntoa(localAddr[i].iiAddress.AddressIn.sin_addr) << endl;
+        if((searchAddress != 0)&&(localAddr[i].iiAddress.AddressIn.sin_addr.s_addr != searchAddress)) continue;
 		flags = localAddr[i].iiFlags;
 		if(!(flags & IFF_UP)) continue;             //Pas démarré
 		if(!(flags & IFF_BROADCAST)) continue;      //Pas de broadcast

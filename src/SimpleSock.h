@@ -265,17 +265,23 @@ class SimpleSockUDP : public SimpleSock
         void Listen(int port, const std::string& ipAddress);
 
         /// \brief    Calculates the broadcast address
-        /// \param    interfaceName     Interface name (only for linux eth generaly)
+        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
         /// \details  Calculates the broadcast address.
         unsigned long BroadcastAddress(const std::string& interfaceName);
 
         /// \brief    Get the local address
-        /// \param    interfaceName     Interface name (only for linux eth generaly)
+        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
         /// \details  Return the local address.
         std::string LocalAddress(const std::string& interfaceName);
 
+        /// \brief    Get the local address
+        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
+        /// \details  Set the network interface for broadcast address calculation.
+        void SetNetworkInterface(const std::string& networkInterface);
+
     private:
         bool GetInterfaceInfo(const std::string& InterfaceName, unsigned int Socket, struct in_addr *localAddr, struct in_addr *maskAddr);
+        std::string m_networkInterface;
 };
 
 /// \brief    Very simple class to manage TCP sockets
