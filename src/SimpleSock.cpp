@@ -354,6 +354,11 @@ void SimpleSockUDP::Open(int port, const string& ipAddress)
     SimpleSock::Open(port, inet_addr(ipAddress.c_str()));
 }
 
+void SimpleSockUDP::Open(int port, unsigned long ipAddress)
+{
+    SimpleSock::Open(port, ipAddress);
+}
+
 void SimpleSockUDP::Listen(int port)
 {
     SimpleSock::Listen(port, BroadcastAddress(m_networkInterface));

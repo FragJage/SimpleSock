@@ -247,6 +247,12 @@ class SimpleSockUDP : public SimpleSock
         /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
         void Open(int port, const std::string& ipAddress);
 
+        /// \brief    Open a connexion
+        /// \param    port          Port number.
+        /// \param    ipAddress     IP Address of the host.
+        /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
+        void Open(int port, unsigned long ipAddress);
+
         /// \brief    Listen for incoming connections
         /// \param    port          Port number.
         /// \details  Listen for incoming connections on the port "port".
