@@ -139,5 +139,6 @@ bool UnitTest::Run()
 		++itClass;
 	}
 	std::cout << termcolor::white;
-  return result;
+  if(!result) return -1;
+  return 0;
 }
