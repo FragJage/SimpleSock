@@ -14,6 +14,8 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
+					<Add directory="src" />
+					<Add directory="dependency" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -49,6 +51,7 @@
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
 					<Add directory="src" />
+					<Add directory="dependency" />
 				</Compiler>
 				<Linker>
 					<Add library="ws2_32" />
@@ -58,8 +61,9 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="src/SafeFunctions.cpp" />
-		<Unit filename="src/SafeFunctions.h" />
+		<Unit filename="dependency/SafeFunctions/SafeFunctions.cpp" />
+		<Unit filename="dependency/SafeFunctions/SafeFunctions.h" />
+		<Unit filename="dependency/UnitTest/UnitTest.h" />
 		<Unit filename="src/SimpleSock.cpp" />
 		<Unit filename="src/SimpleSock.h" />
 		<Unit filename="test/main.cpp" />

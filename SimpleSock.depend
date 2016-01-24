@@ -1,6 +1,5 @@
 # depslib dependency file v1.0
-1444772113 source:d:\sources\simplesock\src\simplesock.cpp
-	<iostream>
+1452549502 source:d:\sources\simplesock\src\simplesock.cpp
 	<exception>
 	"SimpleSock.h"
 
@@ -12,18 +11,19 @@
 	<winsock2.h>
 	<ws2tcpip.h>
 
-1444855012 source:d:\sources\simplesock\test\main.cpp
+1453584954 source:d:\sources\simplesock\test\main.cpp
 	<iostream>
+	<cassert>
 	"SimpleSock.h"
-	<Windows.h>
+	"UnitTest/UnitTest.h"
 
-1444857395 d:\sources\simplesock\src\simplesock.h
+1453063347 d:\sources\simplesock\src\simplesock.h
 	<string>
 	<cstring>
 	<fstream>
 	<sstream>
 	<exception>
-	"SafeFunctions.h"
+	"SafeFunctions/SafeFunctions.h"
 	<cerrno>
 	<sys/ioctl.h>
 	<sys/socket.h>
@@ -42,4 +42,27 @@
 	<cstdint>
 	<stddef.h>
 	<errno.h>
+
+1444766078 d:\sources\simplesock\dependency\safefunctions\safefunctions.h
+	<string.h>
+	<cstdint>
+	<stddef.h>
+	<errno.h>
+
+1444766088 source:d:\sources\simplesock\dependency\safefunctions\safefunctions.cpp
+	"SafeFunctions.h"
+
+1453585299 d:\sources\simplesock\dependency\unittest\unittest.h
+	<algorithm>
+	<string>
+	<vector>
+	<iomanip>
+	"termcolor.h"
+
+1453503480 d:\sources\simplesock\dependency\unittest\termcolor.h
+	<unistd.h>
+	<io.h>
+	<windows.h>
+	<iostream>
+	<cstdio>
 

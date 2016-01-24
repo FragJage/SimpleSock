@@ -13,8 +13,10 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add directory="src" />
+					<Add directory="dependency" />
 				</Compiler>
 				<Linker>
 					<Add library="ws2_32" />
@@ -25,6 +27,8 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="dependency/SafeFunctions/SafeFunctions.cpp" />
+		<Unit filename="dependency/SafeFunctions/SafeFunctions.h" />
 		<Unit filename="examples/example1.cpp" />
 		<Unit filename="src/SimpleSock.cpp" />
 		<Unit filename="src/SimpleSock.h" />

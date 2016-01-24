@@ -98,7 +98,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
-#include "SafeFunctions.h"
+#include "SafeFunctions/SafeFunctions.h"
 
 #ifdef __linux__
     #include <cerrno>
