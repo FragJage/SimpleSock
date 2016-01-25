@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/FragJage/SimpleSock.svg?branch=master)](https://travis-ci.org/FragJage/SimpleSock)
+[![Coverage Status](https://coveralls.io/repos/github/FragJage/SimpleSock/badge.svg?branch=master)](https://coveralls.io/github/FragJage/SimpleSock?branch=master)
 SimpleSock
 ==========
 Very simple class to manage socket communication TCP or UDP.
