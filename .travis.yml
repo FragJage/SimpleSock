@@ -25,7 +25,7 @@ install:
 
 script:
   - cd ${TRAVIS_BUILD_DIR}
-  - cmake .. -G"Unix Makefiles" -DCMAKE_CXX_COMPILER=$(which $CXX)
+  - cmake . -G"Unix Makefiles" -DCMAKE_CXX_COMPILER=$(which $CXX)
   - make
   - ./test/unittest
   
