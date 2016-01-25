@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/FragJage/SimpleSock.svg?branch=master)](https://travis-ci.org/FragJage/SimpleSock)
 SimpleSock
 ==========
 Very simple class to manage socket communication TCP or UDP.
