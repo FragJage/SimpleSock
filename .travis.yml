@@ -17,5 +17,5 @@ script:
   - valgrind --error-exitcode=1 --leak-check=full ./test/unittest
   
 after_success:
-  - coveralls --exclude test/main.cpp --include src/SimpleSock.h --gcov-options '\-lp' --gcov 'gcov-4.9'
+  - coveralls --exclude test/main.cpp --include src/SimpleSock.cpp --gcov-options '\-lp' --gcov 'gcov-4.9'
 
