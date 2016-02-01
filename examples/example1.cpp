@@ -27,11 +27,22 @@ int main()
     catch(const char* e)
     {
         cout << "Argh ! Unable to create UDP socket : " << e << endl;
+        return -1;
     }
 
     cout << "Emit : TOTO-test" << endl;
     sockUDPemetteur.Send("TOTO-test");
-    sockUDPrecepteur.Recv(buffer);
+
+    try
+    {
+        sockUDPrecepteur.Recv(buffer);
+    }
+    catch(const char* e)
+    {
+        cout << "Argh ! Unable to receive data : " << e << endl;
+        return -1;
+    }
+
     cout << "Receive : " << buffer << endl;
 
     sockUDPrecepteur.Close();

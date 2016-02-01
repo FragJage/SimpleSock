@@ -66,7 +66,16 @@ int main()
         return 1;
     }
 
-    sockTCPclient.Recv(bufCli);
+    try
+    {
+        sockTCPclient.Recv(bufCli);
+    }
+    catch(const char* e)
+    {
+        cout << "Argh ! Unable to receive data : " << e << endl;
+        return -1;
+    }
+
     cout << "Client receive : " << bufCli << endl;
 
     sockTCPserver.Close();

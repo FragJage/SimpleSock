@@ -79,13 +79,13 @@ std::vector<TestClass> UnitTest::m_TestClassList;
 
 bool UnitTest::Run()
 {
-	std::vector<TestClass>::iterator itClass;
-	std::vector<TestClass>::iterator itClassEnd;
-	std::vector<TestMethod>::iterator itMethod;
-	std::vector<TestMethod>::iterator itMethodEnd;
-	int padLenght = 0;
-	int len;
-  bool result = true;
+    std::vector<TestClass>::iterator itClass;
+    std::vector<TestClass>::iterator itClassEnd;
+    std::vector<TestMethod>::iterator itMethod;
+    std::vector<TestMethod>::iterator itMethodEnd;
+    int padLenght = 0;
+    int len;
+    bool result = true;
 
 
 	itClass = UnitTest::m_TestClassList.begin();
@@ -97,7 +97,7 @@ bool UnitTest::Run()
 		if (len > padLenght) padLenght = len;
 		while (itMethod != itMethodEnd)
 		{
-			len = itMethod->MethodName.length();
+			len = (itMethod->MethodName!=nullptr) ? itMethod->MethodName.length() : 0;
 			if (len > padLenght) padLenght = len;
 			++itMethod;
 		}
@@ -121,14 +121,14 @@ bool UnitTest::Run()
 				if ((*(itMethod->TestFunction))())
 					std::cout << termcolor::lightGreen << "OK";
 				else
-        {
-          result = false;
-          std::cout << termcolor::lightRed << "KO";
-        }
+                {
+                  result = false;
+                  std::cout << termcolor::lightRed << "KO";
+                }
 			}
 			catch(const std::exception & e)
 			{
-        result = false;
+                result = false;
 				std::cout << termcolor::lightRed << "FAILED" << std::endl;
 				std::cout << termcolor::white << "EXCEPTION" << std::endl << e.what();
 			}
@@ -138,7 +138,8 @@ bool UnitTest::Run()
 		std::cout << std::endl;
 		++itClass;
 	}
-	std::cout << termcolor::white;
-  if(!result) return -1;
-  return 0;
+    std::cout << termcolor::white;
+    std::cout.copyfmt(std::ios(nullptr));
+    if(!result) return -1;
+    return 0;
 }

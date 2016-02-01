@@ -40,13 +40,14 @@ void SimpleSock::InitSocket()
     #endif // WIN32
 }
 
-#pragma GCC diagnostic push         //Enable to initialize struct sockaddr_in m_sockAddress because it's different between LINUX and WIN32
-#pragma GCC diagnostic ignored "-Weffc++"
-SimpleSock::SimpleSock(int type) : m_sockHandle(INVALID_SOCKET), m_isOpen(false), m_sockType(type), m_blocking(false)
+SimpleSock::SimpleSock(int type) : m_sockAddress(), m_sockHandle(INVALID_SOCKET), m_isOpen(false), m_sockType(type), m_blocking(false)
 {
+    m_sockAddress.sin_family = AF_INET;
+    m_sockAddress.sin_port=0;
+    m_sockAddress.sin_addr.s_addr=0;
+
     if(!SimpleSock::m_initSocket) InitSocket();
 }
-#pragma GCC diagnostic pop
 
 SimpleSock::~SimpleSock()
 {
