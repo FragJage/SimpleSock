@@ -1,0 +1,26 @@
+branches:
+  only:
+    - master
+
+shallow_clone: true
+
+platform: x64
+
+os: Visual Studio 2015
+
+clone_folder: c:\build
+
+#init:
+#- git config --global core.autocrlf input
+
+before_build:
+  - echo Running cmake...
+  - cd c:\build
+  - cmake -G "Visual Studio 14 2015 Win64"
+
+build:
+  project: SimpleSock.sln
+
+#test_script:
+#  - cd c:\build
+#  - unittest.exe
