@@ -7,3 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # enable C++11
  
 add_executable(unittest main.cpp ../src/SimpleSock.cpp ../dependency/SafeFunctions/SafeFunctions.cpp)
+
+if(WIN32)
+  target_link_libraries(unittest ws2_32)
+endif()
