@@ -95,9 +95,11 @@ bool UnitTest::Run()
 	{
 		len = itClass->ClassName.length();
 		if (len > padLenght) padLenght = len;
+		itMethod = itClass->TestMethodList.begin();
+		itMethodEnd = itClass->TestMethodList.end();
 		while (itMethod != itMethodEnd)
 		{
-			len = (itMethod->MethodName!=nullptr) ? itMethod->MethodName.length() : 0;
+			len = itMethod->MethodName.length();
 			if (len > padLenght) padLenght = len;
 			++itMethod;
 		}
