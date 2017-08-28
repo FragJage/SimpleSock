@@ -136,6 +136,12 @@ class SimpleSock
         /// \param    port          Port number.
         /// \param    ipAddress     IP Address of the host.
         /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
+        void Open(int port, const std::string& ipAddress);
+
+        /// \brief    Open a connexion
+        /// \param    port          Port number.
+        /// \param    ipAddress     IP Address of the host.
+        /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
         void Open(int port, unsigned long ipAddress);
 
         /// \brief    To test if the connection is open
@@ -145,6 +151,12 @@ class SimpleSock
         /// \brief    Close the connection
         /// \details  Shutdown and close the connection.
         void Close();
+
+        /// \brief    Listen for incoming connections
+        /// \param    port          Port number.
+        /// \param    ipAddress     IP Address of the host.
+        /// \details  Listen for incoming connections IP Address "ipAddress" on the port "port".
+        void Listen(int port, const std::string& ipAddress);
 
         /// \brief    Listen for incoming connections
         /// \param    port          Port number.
@@ -225,101 +237,6 @@ class SimpleSock
         static bool m_initSocket;
         int m_sockType;
         bool m_blocking;
-};
-
-/// \brief    Very simple class to manage UDP sockets
-/// \details  Class allows you to easily manage UDP sockets with very few methods.
-class SimpleSockUDP : public SimpleSock
-{
-    public:
-        /// \brief    Constructor of SimpleSockUDP
-        /// \details  Constructor of SimpleSockUDP.
-        SimpleSockUDP();
-
-        /// \brief    Open a connexion
-        /// \param    port          Port number.
-        /// \details  Open a connexion on the port "port".
-        void Open(int port);
-
-        /// \brief    Open a connexion
-        /// \param    port          Port number.
-        /// \param    ipAddress     IP Address of the host.
-        /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
-        void Open(int port, const std::string& ipAddress);
-
-        /// \brief    Open a connexion
-        /// \param    port          Port number.
-        /// \param    ipAddress     IP Address of the host.
-        /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
-        void Open(int port, unsigned long ipAddress);
-
-        /// \brief    Listen for incoming connections
-        /// \param    port          Port number.
-        /// \details  Listen for incoming connections on the port "port".
-        void Listen(int port);
-
-        /// \brief    Listen for incoming connections
-        /// \param    port          Port number.
-        /// \param    address     IP Address of the host.
-        /// \details  Listen for incoming connections IP Address "ipAddress" on the port "port".
-        void Listen(int port, int address);
-
-        /// \brief    Listen for incoming connections
-        /// \param    port          Port number.
-        /// \param    ipAddress     IP Address of the host.
-        /// \details  Listen for incoming connections IP Address "ipAddress" on the port "port".
-        void Listen(int port, const std::string& ipAddress);
-
-        /// \brief    Calculates the broadcast address
-        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
-        /// \details  Calculates the broadcast address.
-        unsigned long BroadcastAddress(const std::string& interfaceName);
-
-        /// \brief    Get the local address
-        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
-        /// \details  Return the local address.
-        std::string LocalAddress(const std::string& interfaceName);
-
-        /// \brief    Get the local address
-        /// \param    interfaceName     Interface name (eth0 generaly for linux, IP Address for Windows)
-        /// \details  Set the network interface for broadcast address calculation.
-        void SetNetworkInterface(const std::string& networkInterface);
-
-    private:
-        bool GetInterfaceInfo(const std::string& InterfaceName, unsigned int Socket, struct in_addr *localAddr, struct in_addr *maskAddr);
-        std::string m_networkInterface;
-};
-
-/// \brief    Very simple class to manage TCP sockets
-/// \details  Class allows you to easily manage TCP sockets with very few methods.
-class SimpleSockTCP : public SimpleSock
-{
-    public:
-        /// \brief    Constructor of SimpleSockTCP
-        /// \details  Constructor of SimpleSockTCP, optionally can load configuration file \a filename, by Load method. If the Load method fails, an exception is raised.
-        SimpleSockTCP();
-
-        /// \brief    Open a connexion
-        /// \param    port          Port number.
-        /// \param    ipAddress     IP Address of the host.
-        /// \details  Open a connexion to the IP Address "ipAddress" on the port "port".
-        void Connect(const std::string& ipAddress, int port);
-
-        /// \brief    Listen for incoming connections
-        /// \param    port          Port number.
-        /// \details  Listen for incoming connections on the port "port".
-        void Listen(int port);
-
-        /// \brief    Listen for incoming connections
-        /// \param    port          Port number.
-        /// \param    ipAddress     IP Address of the host.
-        /// \details  Listen for incoming connections IP Address "ipAddress" on the port "port".
-        void Listen(int port, const std::string& ipAddress);
-
-        /// \brief    Accept an incoming connections
-        /// \param    sockAccept    Socket of the incoming connection.
-        /// \details  Accept an incoming connection and set the sockAccept.
-        bool Accept(SimpleSockTCP* sockAccept);
 };
 
 /// \brief    Exception management

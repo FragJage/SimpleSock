@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cassert>
-#include "SimpleSock.h"
+#include "SimpleSockTCP.h"
+#include "SimpleSockUDP.h"
 #include "UnitTest/UnitTest.h"
 
 using namespace std;

@@ -41,13 +41,13 @@
 					<Add option="-Wswitch-enum" />
 					<Add option="-Wswitch-default" />
 					<Add option="-Weffc++" />
+					<Add option="-Wzero-as-null-pointer-constant" />
 					<Add option="-Wmain" />
 					<Add option="-pedantic-errors" />
 					<Add option="-pedantic" />
-					<Add option="-Wzero-as-null-pointer-constant" />
-					<Add option="-std=c++11" />
 					<Add option="-Wextra" />
 					<Add option="-Wall" />
+					<Add option="-std=c++11" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
 					<Add directory="src" />
@@ -60,12 +60,20 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-m32" />
 		</Compiler>
+		<Linker>
+			<Add option="-m32" />
+		</Linker>
 		<Unit filename="dependency/SafeFunctions/SafeFunctions.cpp" />
 		<Unit filename="dependency/SafeFunctions/SafeFunctions.h" />
 		<Unit filename="dependency/UnitTest/UnitTest.h" />
 		<Unit filename="src/SimpleSock.cpp" />
 		<Unit filename="src/SimpleSock.h" />
+		<Unit filename="src/SimpleSockTCP.cpp" />
+		<Unit filename="src/SimpleSockTCP.h" />
+		<Unit filename="src/SimpleSockUDP.cpp" />
+		<Unit filename="src/SimpleSockUDP.h" />
 		<Unit filename="test/main.cpp" />
 		<Extensions>
 			<code_completion />

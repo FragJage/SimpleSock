@@ -77,7 +77,7 @@ void SimpleSock::Open(int port, unsigned long ipAddress)
     if(m_sockHandle == INVALID_SOCKET)
     {
         m_sockHandle = (int)socket(AF_INET, m_sockType, 0);
-        if(m_sockHandle==0) throw  SimpleSock::Exception(0x0001, "SimpleSock::Open: unable to create the socket", GetSocketError());
+        if(m_sockHandle==0) throw SimpleSock::Exception(0x0001, "SimpleSock::Open: unable to create the socket", GetSocketError());
     }
 
     memset(&m_sockAddress, 0, sizeof(m_sockAddress));
@@ -85,6 +85,18 @@ void SimpleSock::Open(int port, unsigned long ipAddress)
 	m_sockAddress.sin_port=htons(port);
     m_sockAddress.sin_addr.s_addr=ipAddress;
     m_isOpen = true;
+
+    if(m_sockType==SOCK_DGRAM)
+    {
+        int arg = 1;
+        if(setsockopt(m_sockHandle, SOL_SOCKET, SO_BROADCAST, (char*)&arg, sizeof(int))!=0)
+            throw SimpleSock::Exception(0x0002, "SimpleSock::Open: setsockopt(SO_BROADCAST) error", GetSocketError());
+    }
+}
+
+void SimpleSock::Open(int port, const string& ipAddress)
+{
+    Open(port, inet_addr(ipAddress.c_str()));
 }
 
 bool SimpleSock::isOpen()
@@ -107,26 +119,20 @@ void SimpleSock::Close()
     m_isOpen = false;
 }
 
+void SimpleSock::Listen(int port, const string& ipAddress)
+{
+    Listen(port, inet_addr(ipAddress.c_str()));
+}
+
 void SimpleSock::Listen(int port, unsigned long ipAddress)
 {
-    int arg = 1;
-
     Open(port, ipAddress);
 
-    switch(m_sockType)
+    if(m_sockType==SOCK_STREAM)
     {
-        case SOCK_DGRAM :
-            if(setsockopt(m_sockHandle, SOL_SOCKET, SO_BROADCAST, (char*)&arg, sizeof(int))!=0)
-                throw SimpleSock::Exception(0x0021, "SimpleSock::Listen: setsockopt(SO_BROADCAST) error", GetSocketError());
-            break;
-
-        case SOCK_STREAM :
-            if(setsockopt(m_sockHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&arg, sizeof(int))!=0)
-                throw SimpleSock::Exception(0x0022, "SimpleSock::Listen: setsockopt(SO_REUSEADDR) error", GetSocketError());
-            break;
-
-        default :
-            throw SimpleSock::Exception(0x0024, "SimpleSock::Listen: unknown socket type");
+        int arg = 1;
+        if(setsockopt(m_sockHandle, SOL_SOCKET, SO_REUSEADDR, (char*)&arg, sizeof(int))!=0)
+            throw SimpleSock::Exception(0x0022, "SimpleSock::Listen: setsockopt(SO_REUSEADDR) error", GetSocketError());
     }
 
    	if(bind(m_sockHandle, (struct sockaddr*) &m_sockAddress, sizeof(m_sockAddress))!=0)
@@ -328,217 +334,6 @@ bool SimpleSock::OperationOk()
         if(err == WSAEWOULDBLOCK) return true;
     #endif
     return false;
-}
-
-/***************************************************************************************************/
-/***                                                                                             ***/
-/*** Class SimpleSockUDP                                                                         ***/
-/***                                                                                             ***/
-/***************************************************************************************************/
-SimpleSockUDP::SimpleSockUDP() : SimpleSock(SOCK_DGRAM), m_networkInterface("")
-{
-}
-
-void SimpleSockUDP::SetNetworkInterface(const string& networkInterface)
-{
-    m_networkInterface = networkInterface;
-}
-
-void SimpleSockUDP::Open(int port)
-{
-    SimpleSock::Open(port, BroadcastAddress(m_networkInterface));
-    //Open(port, INADDR_BROADCAST); //-> Erreur sur le sendto
-}
-
-void SimpleSockUDP::Open(int port, const string& ipAddress)
-{
-    SimpleSock::Open(port, inet_addr(ipAddress.c_str()));
-}
-
-void SimpleSockUDP::Open(int port, unsigned long ipAddress)
-{
-    SimpleSock::Open(port, ipAddress);
-}
-
-void SimpleSockUDP::Listen(int port)
-{
-    SimpleSock::Listen(port, BroadcastAddress(m_networkInterface));
-}
-
-void SimpleSockUDP::Listen(int port, int address)
-{
-    SimpleSock::Listen(port, address);
-}
-
-void SimpleSockUDP::Listen(int port, const string& ipAddress)
-{
-    SimpleSock::Listen(port, inet_addr(ipAddress.c_str()));
-}
-
-string SimpleSockUDP::LocalAddress(const string& interfaceName="")
-{
-    int sockUDP;
-    int arg = 1;
-    struct in_addr netmaskAddr;
-    struct in_addr interfaceAddr;
-    bool bOK;
-
-
-	if((sockUDP = socket(AF_INET, SOCK_DGRAM, 0)) == -1) return "127.0.0.1";
-	bOK = ((setsockopt(sockUDP, SOL_SOCKET, SO_BROADCAST, (char*)&arg, sizeof(int))) != -1);
-	if(bOK)
-	{
-        bOK = GetInterfaceInfo(interfaceName, sockUDP, &interfaceAddr, &netmaskAddr);
-    }
-
-    closesocket(sockUDP);
-    if(bOK)
-        return inet_ntoa(interfaceAddr);
-    else
-        return "127.0.0.1";
-}
-
-unsigned long SimpleSockUDP::BroadcastAddress(const string& interfaceName="")
-{
-    SOCKET sockUDP;
-    int arg = 1;
-    unsigned long addr = inet_addr("127.255.255.255");
-    struct in_addr netmaskAddr;
-    struct in_addr interfaceAddr;
-
-
-	if((sockUDP = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET) return addr;
-	if((setsockopt(sockUDP, SOL_SOCKET, SO_BROADCAST, (char*)&arg, sizeof(int))) != -1)
-	{
-        if(GetInterfaceInfo(interfaceName, sockUDP, &interfaceAddr, &netmaskAddr))
-            addr = (~netmaskAddr.s_addr)|interfaceAddr.s_addr;
-    }
-
-    closesocket(sockUDP);
-    return addr;
-}
-
-#ifdef __linux__
-#pragma GCC diagnostic push         //I don't understand, perhaps a false positive
-#pragma GCC diagnostic ignored "-Wcast-align"
-bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceName, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
-{
-	struct ifreq interface;
-
-    if(interfaceName=="")
-    {
-        bool ret;
-        ret = GetInterfaceInfo("eth0", socket, interfaceAddr, netmaskAddr);
-        if(ret) return true;
-        return GetInterfaceInfo("egiga0", socket, interfaceAddr, netmaskAddr);
-    }
-
-	memset((char*)&interface, 0, sizeof(interface));
-	interface.ifr_addr.sa_family = AF_INET;
-	interface.ifr_broadaddr.sa_family = AF_INET;
-    strcpy_s(interface.ifr_name, IFNAMSIZ, interfaceName.c_str());
-
-	if ((ioctl(socket, SIOCGIFADDR, &interface))!=0) return false;
-	memcpy_s(interfaceAddr, sizeof(struct in_addr), &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
-
-	if ((ioctl(socket, SIOCGIFNETMASK, &interface))!=0) return false;
-	memcpy_s(netmaskAddr,   sizeof(struct in_addr), &((struct sockaddr_in*)&interface.ifr_broadaddr)->sin_addr, sizeof(struct in_addr));
-
-	return true;
-}
-#pragma GCC diagnostic pop
-#else
-#pragma GCC diagnostic push         //To conserve the same prototype between WIN32 and LINUX
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-bool SimpleSockUDP::GetInterfaceInfo(const string& interfaceAddress, unsigned int socket, struct in_addr *interfaceAddr, struct in_addr *netmaskAddr)
-{
-	DWORD bytesReturned;
-	u_long flags;
-	INTERFACE_INFO localAddr[10];  //Search the network interface in the top 10 IP interfaces
-	int numLocalAddr;
-	int i;
-    unsigned long searchAddress;
-
-
-    searchAddress = 0;
-    if(interfaceAddress!="")
-    {
-        searchAddress = inet_addr(interfaceAddress.c_str());
-        if(searchAddress == INADDR_NONE) searchAddress = 0;
-        if(searchAddress == INADDR_ANY) searchAddress = 0;
-    }
-
-	if ((WSAIoctl(socket, SIO_GET_INTERFACE_LIST, nullptr, 0, &localAddr, sizeof(localAddr), &bytesReturned, nullptr, nullptr)) == SOCKET_ERROR) return false;
-
-	numLocalAddr = (bytesReturned/sizeof(INTERFACE_INFO));
-	for (i=0; i<numLocalAddr; i++)
-	{
-        if(searchAddress != 0)
-        {
-            if(localAddr[i].iiAddress.AddressIn.sin_addr.s_addr != searchAddress) continue;
-        }
-        else
-        {
-            flags = localAddr[i].iiFlags;
-            if(!(flags & IFF_UP)) continue;             //Pas démarré
-            if(!(flags & IFF_BROADCAST)) continue;      //Pas de broadcast
-            if(!(flags & IFF_MULTICAST)) continue;      //Pas de multicast
-            if (flags & IFF_LOOPBACK) continue;         //C'est le loopback
-            if (flags & IFF_POINTTOPOINT) continue;     //C'est le point à point
-        }
-
-        memcpy_s(interfaceAddr, sizeof(struct in_addr), &localAddr[i].iiAddress.AddressIn.sin_addr, sizeof(struct in_addr));
-        memcpy_s(netmaskAddr,   sizeof(struct in_addr), &localAddr[i].iiNetmask.AddressIn.sin_addr, sizeof(struct in_addr));
-
-		break;
-	}
-
-	return true;
-}
-#pragma GCC diagnostic pop
-#endif
-
-/***************************************************************************************************/
-/***                                                                                             ***/
-/*** Class SimpleSockTCP                                                                         ***/
-/***                                                                                             ***/
-/***************************************************************************************************/
-SimpleSockTCP::SimpleSockTCP() : SimpleSock(SOCK_STREAM)
-{
-}
-
-void SimpleSockTCP::Connect(const string& ipAddress, int port)
-{
-    SimpleSock::Open(port, inet_addr(ipAddress.c_str()));
-    if(connect(m_sockHandle,(sockaddr *) &m_sockAddress, sizeof(sockaddr)) == -1)
-        throw SimpleSockTCP::Exception(0x0061, "SimpleSockTCP::Connect: unable to connect", GetSocketError());
-}
-
-void SimpleSockTCP::Listen(int port)
-{
-    SimpleSock::Listen(port, INADDR_ANY);
-}
-
-void SimpleSockTCP::Listen(int port, const string& ipAddress)
-{
-    SimpleSock::Listen(port, inet_addr(ipAddress.c_str()));
-}
-
-bool SimpleSockTCP::Accept(SimpleSockTCP* sockAccept)
-{
-	ARG_ACCEPT arg;
-	SOCKET	sockClient;
-	sockaddr_in	sockAddr;
-
-
-    arg = sizeof sockAddr;
-    sockClient = accept(m_sockHandle, (sockaddr *)&sockAddr, &arg);
-    if(sockClient==0) return false;
-
-    if(sockAccept->isOpen()) sockAccept->Close();
-    sockAccept->SetSocket(sockClient, sockAddr, SOCK_STREAM);
-
-    return true;
 }
 
 /***************************************************************************************************/
