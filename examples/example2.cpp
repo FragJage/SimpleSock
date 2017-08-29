@@ -7,7 +7,7 @@
 /***********************************************************************************************/
 
 #include <iostream>
-#include "SimpleSock.h"
+#include "SimpleSockTCP.h"
 
 using namespace std;
 

@@ -7,7 +7,7 @@
 /***********************************************************************************************/
 
 #include <iostream>
-#include "SimpleSock.h"
+#include "SimpleSockUDP.h"
 
 using namespace std;
 

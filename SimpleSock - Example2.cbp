@@ -14,12 +14,14 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add option="-std=c++11" />
+					<Add option="-m32" />
 					<Add option="-g" />
 					<Add option="-DDEBUG" />
 					<Add directory="src" />
 					<Add directory="dependency" />
 				</Compiler>
 				<Linker>
+					<Add option="-m32" />
 					<Add library="ws2_32" />
 				</Linker>
 			</Target>
@@ -33,6 +35,7 @@
 		<Unit filename="examples/example2.cpp" />
 		<Unit filename="src/SimpleSock.cpp" />
 		<Unit filename="src/SimpleSock.h" />
+		<Unit filename="src/SimpleSockTCP.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />
