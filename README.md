@@ -1,9 +1,10 @@
-SimpleSock
-==========
 [![Build Status](https://travis-ci.org/FragJage/SimpleSock.svg?branch=master)](https://travis-ci.org/FragJage/SimpleSock)
 [![Build status](https://ci.appveyor.com/api/projects/status/pmlpbnfpc286i6am?svg=true)](https://ci.appveyor.com/project/FragJage/simplesock)
 [![Coverage Status](https://coveralls.io/repos/github/FragJage/SimpleSock/badge.svg?branch=master&bust=1)](https://coveralls.io/github/FragJage/SimpleSock?branch=master)
 [![Coverity Scan Build](https://scan.coverity.com/projects/7738/badge.svg)](https://scan.coverity.com/projects/7738)
+
+SimpleSock
+==========
 Very simple class to manage socket communication TCP or UDP.
 
 Introduction

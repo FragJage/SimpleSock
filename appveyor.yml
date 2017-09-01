@@ -16,12 +16,12 @@ branches:
 
 before_build:
   - echo Running cmake...
-  - cd build
+  - cd c:\projects\simplesock
   - cmd: if "%platform%"=="Win32" cmake -G "Visual Studio 12 2013"
   - cmd: if "%platform%"=="x64" cmake -G "Visual Studio 14 2015 Win64"
 
 build:
-  project: c:\build\SimpleSock.sln
+  project: c:\projects\simplesock\SimpleSock.sln
 
 #test_script:
 #  - cd c:\build
