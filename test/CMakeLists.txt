@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0") # debug, no optimisation
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --coverage") # enabling coverage
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # enable C++11
  
-add_executable(unittest main.cpp ../src/SimpleSock.cpp ../src/SimpleSockTCP.cpp ../src/SimpleSockUDP.cpp ../dependency/SafeFunctions/SafeFunctions.cpp)
+add_executable(unittest main.cpp TestTCPSock.cpp TestUDPSock.cpp ../src/SimpleSock.cpp ../src/SimpleSockTCP.cpp ../src/SimpleSockUDP.cpp ../dependency/SafeFunctions/SafeFunctions.cpp ../dependency/UnitTest/UnitTest.cpp)
 
 if(WIN32)
   target_link_libraries(unittest ws2_32)
