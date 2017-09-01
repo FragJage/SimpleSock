@@ -572,6 +572,7 @@ namespace termcolor
     #if defined(OS_WINDOWS)
         //! Change Windows Terminal colors attribute. If some
         //! parameter is `-1` then attribute won't changed.
+        inline
         void win_change_attributes(std::ostream& stream, int foreground, int background)
         {
             // yeah, i know.. it's ugly, it's windows.
