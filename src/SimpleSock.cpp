@@ -226,8 +226,7 @@ unsigned SimpleSock::Recv(char* buffer, size_t bufferSize)
             throw SimpleSock::Exception(0x0050, "SimpleSock::Recv: unknown socket type");
     }
 
-    if((status==-1)&&(!OperationOk()))
-        throw SimpleSock::Exception(0x0051, "SimpleSock::Recv: recv[from] error", GetSocketError());
+    if((status==-1)&&(!OperationOk())) throw SimpleSock::Exception(0x0051, "SimpleSock::Recv: recv[from] error", GetSocketError());
 
 	return status;
 }
