@@ -16,12 +16,12 @@ configuration: Release
 
 before_build:
   - echo Running cmake...
-  - cd c:\projects\simplesock
+  - cd c:\project\simplesock
   - cmake -G "Visual Studio 12 2013"
-  - dir c:\projects\simplesock
+  - dir c:\project\simplesock
 
 build:
-  project: c:\projects\simplesock\SimpleSock.sln
+  project: c:\project\simplesock\SimpleSock.sln
 
 #test_script:
 #  - cd c:\build
