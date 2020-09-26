@@ -16,8 +16,21 @@
 					<Add option="-std=c++11" />
 					<Add option="-m32" />
 					<Add option="-g" />
-					<Add directory="src" />
-					<Add directory="dependency" />
+				</Compiler>
+				<Linker>
+					<Add option="-m32" />
+				</Linker>
+			</Target>
+			<Target title="Win32">
+				<Option output="bin/test" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++11" />
+					<Add option="-m32" />
+					<Add option="-g" />
 				</Compiler>
 				<Linker>
 					<Add option="-m32" />
@@ -28,6 +41,8 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
+			<Add directory="src" />
+			<Add directory="dependency/SafeFunctions" />
 		</Compiler>
 		<Unit filename="dependency/SafeFunctions/SafeFunctions.cpp" />
 		<Unit filename="dependency/SafeFunctions/SafeFunctions.h" />
@@ -36,10 +51,6 @@
 		<Unit filename="src/SimpleSock.h" />
 		<Unit filename="src/SimpleSockUDP.cpp" />
 		<Extensions>
-			<code_completion />
-			<envvars />
-			<debugger />
-			<lib_finder disable_auto="1" />
 			<DoxyBlocks>
 				<comment_style block="2" line="2" />
 				<doxyfile_project />
@@ -49,6 +60,7 @@
 				<doxyfile_dot />
 				<general />
 			</DoxyBlocks>
+			<lib_finder disable_auto="1" />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

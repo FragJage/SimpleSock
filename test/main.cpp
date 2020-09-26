@@ -1,5 +1,4 @@
 #include <exception>
-//#include "UnitTest/UnitTest.h"
 #include "TestTCPSock.h"
 #include "TestUDPSock.h"
 
@@ -24,7 +23,9 @@ int main()
     }
 
     if(ret!=-1)
+    {
         if(!unitTest.run()) ret = 1;
+    }
 
-	return ret;
+    return ret;
 }

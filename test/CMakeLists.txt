@@ -1,5 +1,6 @@
 include_directories("../src")
-include_directories("../dependency")
+include_directories("../dependency/SafeFunctions")
+include_directories("../dependency/UnitTest")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall") # various warning flags
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")

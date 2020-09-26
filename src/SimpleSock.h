@@ -19,38 +19,8 @@
 */
 /***************************************************************************************************/
 
-/*** MAIN PAGE FOR DOXYGEN *************************************************************************/
-/// \mainpage SimpleSock Class Documentation
+/*** Example of use *************************************************************************/
 ///
-/// \section intro_sec Introduction
-/// Very simple class to manage socket communication TCP or UDP.\n
-/// To use, include in your project SimpleSock.cpp, SimpleSock.h, SafeFunctions.cpp and SafeFunctions.h.
-/// \author Francois GELLEZ
-/// \version 1.1
-/// \date 13/10/2015
-///
-/// \section feature_sec Features
-/// \li Support TCP and UDP Socket
-/// \li Calculate broadcast address
-/// \li Family AF_INET (IPv4)
-/// \li Compile on Linux and Windows, Intel or ARM.
-///
-/// \section quality_sec Quality developpment
-/// \li Static audit with CppCheck
-/// \li Security audit with VisualCodeGrepper
-/// \li Dynamic audit with Address Sanitizer.
-/// \li Unit tests replay for each version.
-///
-/// \section portability_sec Portability
-/// Unit tests passed successfully on :
-/// \li Windows Seven (CPU Intel Celeron) with MinGW
-/// \li Linux Ubuntu (CPU Intel Atom)
-/// \li Linux Raspian on Raspberry Pi (CPU ARM)
-/// \li Linux FunPlug on NAS DNS-320 (CPU ARM)
-/// \n For GCC versions < 4.7 replaced -std=C++11 by -std=C++0x
-///
-/// \section example_sec Example
-/// \code
 /// #include <iostream>
 /// #include "SimpleSock.h"
 ///
@@ -77,16 +47,6 @@
 ///
 ///     return 0;
 /// }
-/// \endcode
-///
-/// \section WhatsNew1_sec What's New in version 1.1
-/// \li Add security audit of source code
-/// \li Add many Warning Options on GCC
-///
-/// \section licence_sec Licence
-///  SimpleSock is free software : you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.\n\n
-///  SimpleSock is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.\n\n
-///  You should have received a copy of the GNU General Public License along with SimpleSock. If not, see <http://www.gnu.org/licenses/>.
 ///
 /***************************************************************************************************/
 

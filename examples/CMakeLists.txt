@@ -1,5 +1,6 @@
 include_directories("../src")
-include_directories("../dependency")
+include_directories("../dependency/SafeFunctions")
+include_directories("../dependency/UnitTest")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11") # enable C++11
  

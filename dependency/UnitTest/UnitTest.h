@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
-#include"UnitTest/termcolor.h"
+#include"termcolor.h"
 
 class ITestClass
 {
