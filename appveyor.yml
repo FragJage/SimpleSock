@@ -20,8 +20,8 @@ before_build:
   - cmake -G "Visual Studio 12 2013"
   - dir c:\projects\simplesock
 
-build: off
-  #project: c:\projects\simplesock\SimpleSock.sln
+build:
+  project: c:\projects\simplesock\SimpleSock.sln
 
 #test_script:
 #  - cd c:\build
