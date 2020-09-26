@@ -11,7 +11,7 @@ init:
   
 clone_folder: c:\project\simplesock
 
-platform: Win32
+platform: x86
 configuration: Release
 
 before_build:
