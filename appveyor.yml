@@ -9,8 +9,8 @@ init:
   
 clone_folder: c:\project\simplesock
 
-platform: Win32
-configuration: Release
+platform: x86
+configuration: Debug
 
 build:
   project: c:\project\simplesock\SimpleSock.sln
