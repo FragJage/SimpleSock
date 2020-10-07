@@ -25,9 +25,6 @@
 #   error unsupported platform
 #endif
 
-#ifndef _fileno
-    #define _fileno(F) ((F)->_file)
-#endif
 
 // This headers provides the `isatty()`/`fileno()` functions,
 // which are used for testing whether a standart stream refers

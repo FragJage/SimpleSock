@@ -1,5 +1,5 @@
-#include "UnitTest.h"
 #include "SimpleSockTCP.h"
+#include "UnitTest.h"
 
 class TestTCPSock : public TestClass<TestTCPSock>
 {

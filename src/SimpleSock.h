@@ -58,9 +58,9 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
-#include "SafeFunctions.h"
 
 #ifdef __linux__
+    #include "SafeFunctions.h"
     #include <cerrno>
     #include <sys/ioctl.h>
     #include <sys/socket.h>

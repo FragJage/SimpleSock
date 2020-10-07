@@ -25,7 +25,6 @@ int main()
     {
         sockTCPserver.Listen(5750);
         sockTCPserver.Blocking(false);
-        //sockTCPclient.Connect("87.98.130.52", 80);
         sockTCPclient.Connect("127.0.0.1", 5750);
         sockTCPclient.Blocking(false);
     }

@@ -6,19 +6,11 @@ os: Visual Studio 2015
 
 init:
   - git config --global core.autocrlf input  
-  - cmd: cmake --version
-  - cmd: msbuild /version
   
 clone_folder: c:\project\simplesock
 
 platform: Win32
 configuration: Release
-
-before_build:
-  - echo Running cmake...
-  - cd c:\project\simplesock
-  - cmake -G "Visual Studio 12 2013"
-  - dir c:\project\simplesock
 
 build:
   project: c:\project\simplesock\SimpleSock.sln

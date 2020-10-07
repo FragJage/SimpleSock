@@ -1,5 +1,5 @@
-#include "UnitTest.h"
 #include "SimpleSockUDP.h"
+#include "UnitTest.h"
 
 class TestUDPSock : public TestClass<TestUDPSock>
 {
