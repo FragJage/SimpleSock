@@ -157,6 +157,12 @@ class SimpleSock
         /// \details  Set the blocking mode.
         void Blocking(bool blocking);
 
+        /// \brief    Set timeout
+        /// \param    send      Send timeout
+        /// \param    recv      Receive timeout
+        /// \details  Set send and receive timeout
+        void SetTimeout(int send=-1, int recv=-1);
+
         /// \brief    Get the port
         /// \details  Get the port of the connection
         int GetPort();

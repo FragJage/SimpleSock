@@ -20,6 +20,9 @@
 /***************************************************************************************************/
 #include <exception>
 #include "SimpleSockTCP.h"
+
+#include <iostream>
+
 using namespace std;
 
 /***************************************************************************************************/
@@ -27,15 +30,34 @@ using namespace std;
 /*** Class SimpleSockTCP                                                                         ***/
 /***                                                                                             ***/
 /***************************************************************************************************/
-SimpleSockTCP::SimpleSockTCP() : SimpleSock(SOCK_STREAM)
+SimpleSockTCP::SimpleSockTCP() : SimpleSock(SOCK_STREAM), m_ConnectTimeout(-1)
 {
 }
 
 void SimpleSockTCP::Connect(const string& ipAddress, int port)
 {
     SimpleSock::Open(port, inet_addr(ipAddress.c_str()));
-    if(connect(m_sockHandle,(sockaddr *) &m_sockAddress, sizeof(sockaddr)) == -1)
-        throw SimpleSockTCP::Exception(0x0061, "SimpleSockTCP::Connect: unable to connect", GetSocketError());
+    if(connect(m_sockHandle,(sockaddr *) &m_sockAddress, sizeof(sockaddr)) == 0) return;
+
+    int error = GetSocketError();
+    if((m_ConnectTimeout == -1)||(error != EINPROGRESS))
+    {
+        throw SimpleSockTCP::Exception(0x0061, "SimpleSockTCP::Connect: unable to connect", error);
+    }
+
+   	fd_set fsSock;
+	struct timeval tvDelay;
+
+    FD_ZERO(&fsSock);
+    FD_SET(m_sockHandle, &fsSock);
+
+    tvDelay.tv_sec=m_ConnectTimeout;
+    tvDelay.tv_usec=0;
+
+    select(m_sockHandle+1, nullptr, &fsSock, nullptr, &tvDelay);
+
+    if(FD_ISSET(m_sockHandle, &fsSock)<=0)
+        throw SimpleSockTCP::Exception(0x0062, "SimpleSockTCP::Connect: timeout for connect", GetSocketError());
 }
 
 bool SimpleSockTCP::Accept(SimpleSockTCP* sockAccept)
@@ -63,4 +85,10 @@ void SimpleSockTCP::Listen(int port)
 void SimpleSockTCP::Listen(int port, const string& ipAddress)
 {
     SimpleSock::Listen(port, ipAddress);
+}
+
+void SimpleSockTCP::SetTimeout(int send, int recv, int connect)
+{
+    SimpleSock::SetTimeout(send, recv);
+    m_ConnectTimeout = connect;
 }

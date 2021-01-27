@@ -50,12 +50,16 @@ class SimpleSockTCP : public SimpleSock
         void Listen(int port);
         void Listen(int port, const std::string& ipAddress);
 
+
+        void SetTimeout(int send=-1, int recv=-1, int connect=-1);
+
         #ifdef SIMPLESOCKTCP_MOCK
         static std::string GetLastSend(int delay);
         static void SetNextRecv(std::string value);
         #endif
 
     private:
+        int m_ConnectTimeout;
         #ifdef SIMPLESOCKTCP_MOCK
         static bool SomethingToRecv();
         static std::string GetRecv();

@@ -313,6 +313,22 @@ void SimpleSock::Blocking(bool blocking)
     m_blocking = blocking;
 }
 
+void SimpleSock::SetTimeout(int send, int recv)
+{
+    if(send != -1)
+    {
+        struct timeval tvSend;
+        tvSend.tv_sec = send;
+        setsockopt(m_sockHandle, SOL_SOCKET, SO_SNDTIMEO,(struct timeval *)&tvSend,sizeof(struct timeval));
+    }
+    if(recv != -1)
+    {
+        struct timeval tvRecv;
+        tvRecv.tv_sec = recv;
+        setsockopt(m_sockHandle, SOL_SOCKET, SO_RCVTIMEO,(struct timeval *)&tvRecv,sizeof(struct timeval));
+    }
+}
+
 int SimpleSock::GetSocketError()
 {
     #ifdef __linux__
